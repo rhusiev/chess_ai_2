@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "chess-ai"
+version = "0.1.0"
+description = "A chess AI"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+chess = "^1.10.0"
+numpy = "^1.26.3"
+torch = "^2.1.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.1.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
