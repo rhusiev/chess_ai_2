@@ -4,16 +4,16 @@ import numpy as np
 
 ELO_RANGES = [
     # 800,
-    1200,
-    # 1600,
+    # 1200,
+    1600,
     # 2000,
     # 2400,
 ]
 NUM_FOR_SINGLE_OF_ELO_RANGE = 8000
 ELO_RANGE_MUL = [
     # 2,
-    4 - 2,
-    # 6 - 4,
+    # 4 - 2,
+    6 - 4,
     # 6,
     # 4,
 ]
@@ -267,7 +267,7 @@ if __name__ == "__main__":
     path = "./data/lichess_2020-11.pgn"
     with open(path) as pgn:
         i = 0
-        offsets, counts = get_offsets(pgn, skip=ELO_RANGE_MUL[i] * NUM_FOR_SINGLE_OF_ELO_RANGE)
+        offsets, counts = get_offsets(pgn, skip=4 * NUM_FOR_SINGLE_OF_ELO_RANGE)
         # for i in range(5):
         #     elo = ELO_RANGES[i]
         #     process_elos((elo, elo + 400), offsets[elo], counts[elo])

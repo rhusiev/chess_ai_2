@@ -7,12 +7,13 @@ def numpy_to_tensor(numpy_array):
 
 
 if __name__ == "__main__":
-    DATA_DIR = "data/20.11/"
-    paths = [
-        f"{DATA_DIR}moves_tensors_1600-2000.npy",
-        f"{DATA_DIR}states_consts_tensors_1600-2000.npy",
-        f"{DATA_DIR}states_tensors_1600-2000.npy",
-    ]
+    DATA_DIR = "data/20.11.additional/"
+    ratings = ["1600-2000"]
+    paths: list[str] = []
+    for rating in ratings:
+        paths.append(f"{DATA_DIR}moves_tensors_{rating}.npy")
+        paths.append(f"{DATA_DIR}states_consts_tensors_{rating}.npy")
+        paths.append(f"{DATA_DIR}states_tensors_{rating}.npy")
     for path in paths:
         numpy_array = np.load(path)
         tensor = numpy_to_tensor(numpy_array)

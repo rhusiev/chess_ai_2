@@ -1,7 +1,8 @@
 [tool.poetry]
-name = "chess-ai"
+name = "chess_ai"
 version = "0.1.0"
 description = "A chess AI"
+authors = ["rhusiev <63148080+rhusiev@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -9,7 +10,6 @@ python = "^3.11"
 chess = "^1.10.0"
 numpy = "^1.26.3"
 torch = "^2.1.2"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
