@@ -148,19 +148,21 @@ def move_to_tensor(move: chess.Move) -> np.ndarray:
 
 
 def process_elos(elo: tuple[int, int], offsets: list, total_games: int) -> None:
-    print(f"Processing elos {elo[0]}-{elo[1]}")
+    print(f"Processing elos {elo[0]}-{elo[1]}.")
 
+    print("Making matrices...")
     states_tensors, states_consts_tensors, moves_tensors = process_offsets(
         offsets, total_games, pgn
     )
+    print("Finished making matrices.")
+    print("Saving matrices...")
+
     np.save(f"{EXPORT_LOCATION}/states_tensors_{elo[0]}-{elo[1]}.npy", states_tensors)
     np.save(
         f"{EXPORT_LOCATION}/states_consts_tensors_{elo[0]}-{elo[1]}.npy",
         states_consts_tensors,
     )
     np.save(f"{EXPORT_LOCATION}/moves_tensors_{elo[0]}-{elo[1]}.npy", moves_tensors)
-
-    print("Finished making matrices.")
 
     print("Finished saving values.")
 
