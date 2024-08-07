@@ -4,19 +4,21 @@ import numpy as np
 
 ELO_RANGES = [
     # 800,
-    # 1200,
-    1600,
+    1200,
+    # 1600,
     # 2000,
     # 2400,
 ]
 NUM_FOR_SINGLE_OF_ELO_RANGE = 8000
 ELO_RANGE_MUL = [
     # 2,
-    # 2,
     4 - 2,
+    # 6 - 4,
+    # 6,
     # 4,
-    # 3,
 ]
+
+EXPORT_LOCATION = "./data/20.11.additional"
 
 
 def game_to_tensor(game: chess.pgn.GameNode) -> tuple[np.ndarray, np.ndarray]:
@@ -151,12 +153,12 @@ def process_elos(elo: tuple[int, int], offsets: list, total_games: int) -> None:
     states_tensors, states_consts_tensors, moves_tensors = process_offsets(
         offsets, total_games, pgn
     )
-    np.save(f"./data/20.11/states_tensors_{elo[0]}-{elo[1]}.npy", states_tensors)
+    np.save(f"{EXPORT_LOCATION}/states_tensors_{elo[0]}-{elo[1]}.npy", states_tensors)
     np.save(
-        f"./data/20.11/states_consts_tensors_{elo[0]}-{elo[1]}.npy",
+        f"{EXPORT_LOCATION}/states_consts_tensors_{elo[0]}-{elo[1]}.npy",
         states_consts_tensors,
     )
-    np.save(f"./data/20.11/moves_tensors_{elo[0]}-{elo[1]}.npy", moves_tensors)
+    np.save(f"{EXPORT_LOCATION}/moves_tensors_{elo[0]}-{elo[1]}.npy", moves_tensors)
 
     print("Finished making matrices.")
 
@@ -262,8 +264,10 @@ if __name__ == "__main__":
     # path = "../test/neural_chess/lichess_2022_02.pgn"
     path = "./data/lichess_2020-11.pgn"
     with open(path) as pgn:
-        offsets, counts = get_offsets(pgn)
-        # for i in range(800, 2401, 400):
-            # process_elos((i, i + 400), offsets[i], counts[i])
-        i = 1600
-        process_elos((i, i + 400), offsets[i], counts[i])
+        i = 0
+        offsets, counts = get_offsets(pgn, skip=ELO_RANGE_MUL[i] * NUM_FOR_SINGLE_OF_ELO_RANGE)
+        # for i in range(5):
+        #     elo = ELO_RANGES[i]
+        #     process_elos((elo, elo + 400), offsets[elo], counts[elo])
+        elo = ELO_RANGES[i]
+        process_elos((elo, elo + 400), offsets[elo], counts[elo])
