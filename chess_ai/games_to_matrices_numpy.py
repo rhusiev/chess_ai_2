@@ -2,23 +2,34 @@ import chess
 import chess.pgn
 import numpy as np
 
+import os
+
 ELO_RANGES = [
     # 800,
     # 1200,
-    1600,
+    # 1600,
     # 2000,
-    # 2400,
+    2400,
 ]
 NUM_FOR_SINGLE_OF_ELO_RANGE = 8000
 ELO_RANGE_MUL = [
     # 2,
-    # 4 - 2,
-    6 - 4,
+    # 4
+    # 6
     # 6,
-    # 4,
+    1 # mb like 8, but will need more datasets
+]
+ELO_RANGE_ALREADY_DONE_MUL = [
+    # 2
+    # 4
+    # 6
+    # 6,
+    2
 ]
 
-EXPORT_LOCATION = "./data/20.11.additional"
+EXPORT_LOCATION = "./data/20.11-1"
+PGN = "./data/lichess_2020-11.pgn"
+# PGN = "../test/neural_chess/lichess_2022_02.pgn"
 
 
 def game_to_tensor(game: chess.pgn.GameNode) -> tuple[np.ndarray, np.ndarray]:
@@ -167,24 +178,28 @@ def process_elos(elo: tuple[int, int], offsets: list, total_games: int) -> None:
     print("Finished saving values.")
 
 
-def get_offsets(pgn, skip=0) -> tuple[dict[int, list[int]], dict[int, int]]:
+def get_offsets(pgn, skip_games_per_elo=0, skip_pgn_games=0) -> tuple[dict[int, list[int]], dict[int, int]]:
     print("Finding rated games")
     # The number is the starting elo
     offsets = {}
     counts = {}
     for elo in ELO_RANGES:
         offsets[elo] = []
-        counts[elo] = -skip
+        counts[elo] = -skip_games_per_elo
 
     count = 0
     print(counts, end="\r")
     while True:
         count += 1
         if sum(counts.values()) >= sum(ELO_RANGE_MUL) * NUM_FOR_SINGLE_OF_ELO_RANGE:
+            print("Last count:", count)
             break
         offset = pgn.tell()
+        if count <= skip_pgn_games:
+            continue
         headers = chess.pgn.read_headers(pgn)
         if not headers:
+            print("No headers - breaking out of the loop")
             break
         elos = headers.get("WhiteElo"), headers.get("BlackElo")
         if elos is None or elos[0] is None or elos[1] is None:
@@ -263,11 +278,18 @@ def process_offsets(offsets: list, total_games: int, pgn):
 
 
 if __name__ == "__main__":
-    # path = "../test/neural_chess/lichess_2022_02.pgn"
-    path = "./data/lichess_2020-11.pgn"
-    with open(path) as pgn:
+    try:
+        tmp_file = f"{EXPORT_LOCATION}/tmp"
+        with open(tmp_file, "w"):
+            ...
+        os.remove(tmp_file)
+    except Exception as e:
+        print(f"Exception trying to create a file in {EXPORT_LOCATION}")
+        print(e)
+        exit()
+    with open(PGN) as pgn:
         i = 0
-        offsets, counts = get_offsets(pgn, skip=4 * NUM_FOR_SINGLE_OF_ELO_RANGE)
+        offsets, counts = get_offsets(pgn, skip_games_per_elo=ELO_RANGE_ALREADY_DONE_MUL[i] * NUM_FOR_SINGLE_OF_ELO_RANGE, skip_pgn_games=0)
         # for i in range(5):
         #     elo = ELO_RANGES[i]
         #     process_elos((elo, elo + 400), offsets[elo], counts[elo])

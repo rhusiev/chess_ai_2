@@ -7,8 +7,8 @@ def numpy_to_tensor(numpy_array):
 
 
 if __name__ == "__main__":
-    DATA_DIR = "data/20.11.additional/"
-    ratings = ["1600-2000"]
+    DATA_DIR = "data/20.11/"
+    ratings = ["2400-2800-2"]
     paths: list[str] = []
     for rating in ratings:
         paths.append(f"{DATA_DIR}moves_tensors_{rating}.npy")
